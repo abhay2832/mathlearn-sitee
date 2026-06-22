@@ -1,113 +1,205 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fast Temp Mail</title>
+    <title>Fast Temp Mail Service</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
-        h2 { color: #333; margin-bottom: 20px; }
-        .email-box { background: #e9ecef; padding: 15px; border-radius: 5px; font-size: 18px; font-weight: bold; color: #007bff; margin-bottom: 20px; word-break: break-all; }
-        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        button { border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
-        .btn-new { background: #28a745; } .btn-new:hover { background: #218838; }
-        .btn-copy { background: #007bff; } .btn-copy:hover { background: #0069d9; }
-        .btn-refresh { background: #ffc107; color: black; } .btn-refresh:hover { background: #e0a800; }
-        .inbox { text-align: left; margin-top: 20px; width: 100%; max-width: 500px; }
-        .message { background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 10px; border-left: 4px solid #007bff; }
-        .message span { font-weight: bold; color: #555; display: block; margin-bottom: 5px; }
-        .loader { display: none; margin-top: 10px; font-size: 14px; color: #666; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); width: 100%; max-width: 550px; padding: 30px; text-align: center; border: 1px solid #eef2f5; }
+        h1 { font-size: 24px; color: #1e293b; margin-bottom: 6px; font-weight: 700; }
+        p.subtitle { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+        .email-container { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 16px; font-size: 18px; font-weight: 600; color: #2563eb; margin-bottom: 24px; word-break: break-all; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        button { color: white; border: none; padding: 14px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        button:active { transform: scale(0.98); }
+        .btn-new { background: #10b981; } .btn-new:hover { background: #059669; }
+        .btn-copy { background: #3b82f6; } .btn-copy:hover { background: #2563eb; }
+        .btn-fetch { background: #6366f1; } .btn-fetch:hover { background: #4f46e5; }
+        .btn-refresh { background: #f59e0b; } .btn-refresh:hover { background: #d97706; }
+        .status { font-size: 14px; color: #64748b; margin-bottom: 16px; font-weight: 500; display: none; }
+        .inbox-section { text-align: left; margin-top: 10px; width: 100%; }
+        .inbox-title { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
+        .mail-list { display: flex; flex-direction: column; gap: 12px; }
+        .mail-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; transition: all 0.2s; cursor: pointer; }
+        .mail-item:hover { border-color: #cbd5e1; background: #f1f5f9; }
+        .mail-header { display: flex; justify-content: space-between; font-size: 12px; color: #64748b; margin-bottom: 6px; }
+        .mail-from { font-weight: 600; color: #334155; }
+        .mail-subject { font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 4px; }
+        .mail-body { font-size: 14px; color: #475569; white-space: pre-line; background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 10px; display: none; }
+        .empty-inbox { text-align: center; color: #94a3b8; padding: 30px 10px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>Fast Temp Mail</h2>
-        <div class="email-box" id="emailDisplay">Loading...</div>
+    <div class="card">
+        <h1>Fast Temp Mail</h1>
+        <p class="subtitle">Bina kisi error ke Instagram accounts banayein</p>
         
-        <div class="btn-group">
-            <button class="btn-new" onclick="getNewEmail()">New Fast Email</button>
-            <button class="btn-copy" onclick="copyEmail()">Copy Email</button>
-            <button class="btn-refresh" onclick="fetchInbox()">Inbox Refresh</button>
+        <div class="email-container" id="emailDisplay">Loading...</div>
+        
+        <div id="statusNotification" class="status">Processing...</div>
+
+        <div class="grid-buttons">
+            <button class="btn-new" onclick="generateEmail()">New Email Fast Email</button>
+            <button class="btn-copy" id="copyBtn" onclick="copyEmail()">Copy Email</button>
+            <button class="btn-fetch" onclick="checkInbox()">Fetch Email</button>
+            <button class="btn-refresh" onclick="checkInbox()">Inbox Refresh</button>
         </div>
-        <div class="loader" id="loader">Checking for messages...</div>
+
+        <div class="inbox-section">
+            <div class="inbox-title">Inbox (Neeche aaye mail par click karke OTP dekhein)</div>
+            <div class="mail-list" id="mailList">
+                <div class="empty-inbox">Inbox khali hai. Instagram OTP ka wait karein...</div>
+            </div>
+        </div>
     </div>
 
-    <div class="inbox" id="inboxDisplay">
-        </div>
-
     <script>
-        let currentEmail = "";
-        let currentLogin = "";
-        let currentDomain = "";
+        let currentEmail = localStorage.getItem('temp_email') || '';
+        let login = localStorage.getItem('temp_login') || '';
+        let domain = localStorage.getItem('temp_domain') || '';
 
-        // Function to generate a new email
-        async function getNewEmail() {
-            document.getElementById('emailDisplay').innerText = "Generating...";
+        // Universal Fetch Content Handler (Bypasses CORS & Network Blocks)
+        async function robustFetch(url) {
             try {
-                let response = await fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1');
-                let data = await response.json();
+                let response = await fetch(url);
+                if (response.ok) return await response.json();
+            } catch (e) {
+                console.log("Direct API blocked, switching to secure proxy...");
+            }
+            // Fallback Proxy Strategy
+            let proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            let response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Network Error");
+            let data = await response.json();
+            return typeof data.contents === 'string' ? JSON.parse(data.contents) : data.contents;
+        }
+
+        function showStatus(text, isError = false) {
+            let status = document.getElementById('statusNotification');
+            status.innerText = text;
+            status.style.color = isError ? "#ef4444" : "#64748b";
+            status.style.display = "block";
+        }
+
+        function hideStatus() {
+            document.getElementById('statusNotification').style.display = "none";
+        }
+
+        function renderEmail() {
+            document.getElementById('emailDisplay').innerText = currentEmail || "No Email Generated";
+        }
+
+        // Generate New Email Action
+        async function generateEmail() {
+            showStatus("Generating fresh email address...");
+            try {
+                let data = await robustFetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1');
                 currentEmail = data[0];
                 let parts = currentEmail.split('@');
-                currentLogin = parts[0];
-                currentDomain = parts[1];
-                document.getElementById('emailDisplay').innerText = currentEmail;
-                document.getElementById('inboxDisplay').innerHTML = ""; // Clear inbox
-            } catch (error) {
-                document.getElementById('emailDisplay').innerText = "Error generating email";
+                login = parts[0];
+                domain = parts[1];
+
+                localStorage.setItem('temp_email', currentEmail);
+                localStorage.setItem('temp_login', login);
+                localStorage.setItem('temp_domain', domain);
+
+                renderEmail();
+                document.getElementById('mailList').innerHTML = '<div class="empty-inbox">Inbox khali hai. Instagram OTP ka wait karein...</div>';
+                hideStatus();
+            } catch (err) {
+                showStatus("Error generating email. Click again.", true);
             }
         }
 
-        // Function to copy email to clipboard
+        // Copy Email to Clipboard
         function copyEmail() {
-            if (!currentEmail) return;
+            if (!currentEmail) {
+                showStatus("Pehle email generate karein!", true);
+                return;
+            }
             navigator.clipboard.writeText(currentEmail).then(() => {
-                let copyBtn = document.querySelector('.btn-copy');
-                copyBtn.innerText = "Copied!";
-                setTimeout(() => copyBtn.innerText = "Copy Email", 2000);
+                let btn = document.getElementById('copyBtn');
+                btn.innerText = "Copied! ✓";
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    btn.innerText = "Copy Email";
+                    btn.style.background = "#3b82f6";
+                }, 2000);
             });
         }
 
-        // Function to fetch emails for the current inbox
-        async function fetchInbox() {
-            if (!currentLogin || !currentDomain) return;
-            
-            document.getElementById('loader').style.display = "block";
-            document.getElementById('inboxDisplay').innerHTML = "";
-
+        // Fetch & Refresh Inbox System
+        async function checkInbox() {
+            if (!login || !domain) {
+                showStatus("Pehle ek active email banayein.", true);
+                return;
+            }
+            showStatus("Checking inbox for new messages...");
             try {
-                let response = await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${currentDomain}`);
-                let messages = await response.json();
+                let messages = await robustFetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`);
+                let listContainer = document.getElementById('mailList');
+                listContainer.innerHTML = "";
 
                 if (messages.length === 0) {
-                    document.getElementById('inboxDisplay').innerHTML = "<p style='text-align:center; color:#777;'>Inbox is empty. Waiting for Instagram code...</p>";
-                } else {
-                    for (let msg of messages) {
-                        // Fetch individual message details
-                        let msgRes = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${msg.id}`);
-                        let msgData = await msgRes.json();
-
-                        let msgElement = document.createElement('div');
-                        msgElement.className = "message";
-                        msgElement.innerHTML = `
-                            <span>From: ${msgData.from}</span>
-                            <span>Subject: ${msgData.subject}</span>
-                            <p>${msgData.textBody || "No text content"}</p>
-                        `;
-                        document.getElementById('inboxDisplay').appendChild(msgElement);
-                    }
+                    listContainer.innerHTML = '<div class="empty-inbox">Inbox khali hai. Instagram OTP ka wait karein...</div>';
+                    showStatus("No new mail found.");
+                    setTimeout(hideStatus, 2000);
+                    return;
                 }
-            } catch (error) {
-                document.getElementById('inboxDisplay').innerHTML = "<p style='text-align:center; color:red;'>Error fetching inbox.</p>";
+
+                messages.forEach(msg => {
+                    let item = document.createElement('div');
+                    item.className = "mail-item";
+                    item.onclick = () => toggleMailBody(msg.id, item);
+                    item.innerHTML = `
+                        <div class="mail-header">
+                            <span class="mail-from">From: ${msg.from}</span>
+                            <span>ID: ${msg.id}</span>
+                        </div>
+                        <div class="mail-subject">${msg.subject || '(No Subject)'}</div>
+                        <div class="mail-body" id="body-${msg.id}">Loading message content...</div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+                hideStatus();
+            } catch (err) {
+                showStatus("Error checking inbox. Try again.", true);
             }
-            document.getElementById('loader').style.display = "none";
         }
 
-        // Auto-generate on load
-        window.onload = getNewEmail;
-    </script>
+        // Fetch Full Message Body on Click
+        async function toggleMailBody(id, element) {
+            let bodyDiv = document.getElementById(`body-${id}`);
+            if (bodyDiv.style.display === "block") {
+                bodyDiv.style.display = "none";
+                return;
+            }
 
+            bodyDiv.style.display = "block";
+            if (bodyDiv.getAttribute('data-loaded') === 'true') return;
+
+            try {
+                let data = await robustFetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${id}`);
+                bodyDiv.innerText = data.textBody || data.htmlBody.replace(/<[^>]*>/g, '') || "Empty Message Content";
+                bodyDiv.setAttribute('data-loaded', 'true');
+            } catch (err) {
+                bodyDiv.innerText = "Error loading message text.";
+            }
+        }
+
+        // Initialize setup
+        window.onload = () => {
+            if (currentEmail) {
+                renderEmail();
+                checkInbox();
+            } else {
+                generateEmail();
+            }
+        };
+    </script>
 </body>
 </html>
