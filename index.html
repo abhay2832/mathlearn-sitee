@@ -1,121 +1,92 @@
-<!DOCTYPE html><html lang="en">
+<!-- filename: sms_bomber.html -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real Temp Mail</title><style>
-body {
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-  text-align: center;
-  padding: 20px;
-}
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>SMS Bomber</title>
+ <style>
+ body {
+ font-family: Arial, sans-serif;
+ background-color: #f0f0f0;
+ }
+ 
+ .container {
+ width: 500px;
+ margin: 100px auto;
+ padding: 20px;
+ background-color: #fff;
+ border-radius: 10px;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+ }
+ 
+ input[type="text"], input[type="number"] {
+ width: 100%;
+ height: 30px;
+ margin-bottom: 10px;
+ padding-left: 10px;
+ }
+ 
+ button {
+ width: 100%;
+ height: 30px;
+ background-color: #4CAF50;
+ color: #fff;
+ cursor: pointer;
+ }
+ 
+ button:hover {
+ background-color: #3e8e41;
+ }
+ </style>
+</head>
+<body>
+ <div class="container">
+ <h2>SMS Bomber</h2>
+ <form id="smsForm">
+ <label for="number">Enter Mobile Number:</label><br>
+ <input type="text" id="number" name="number" placeholder="+123456789012"><br>
+ 
+ <label for="count">Number of SMS:</label><br>
+ <input type="number" id="count" name="count" value="10"><br>
+ 
+ <button type="submit">Start Bombing</button>
+ </form>
+ 
+ <div id="status"></div>
+ </div>
 
-.box {
-  background: #1e293b;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px auto;
-  max-width: 400px;
-}
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-input, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 5px;
-  border: none;
-}
+ <script>
+ $(document).ready(function() {
+ $('#smsForm').submit(function(e) {
+ e.preventDefault();
+ var number = $('#number').val();
+ var count = $('#count').val();
 
-button {
-  background: #22c55e;
-  cursor: pointer;
-}
+ if (number.length > 6 && !isNaN(count)) {
+ $.ajax({
+ type: 'POST',
+ url: 'sms.php', // Change to your PHP file URL
+ data: {number:number, count:count},
+ success:function(response) {
+ $('#status').html('Bombed '+count+' SMS successfully!');
+ },
+ error:function() {
+ $('#status').html('Failed! Check your server.');
+ }
+ });
+ } else {
+ $('#status').html('Invalid input!');
+ }
+ 
+ // Clear form after submission
+ this.reset();
+ return false; 
+ });
+ });
+ </script>
 
-.mail {
-  background: #334155;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: left;
-}
-</style></head><body><h2>📧 Real Temp Mail</h2><div class="box">
-<input type="text" id="email" readonly placeholder="Click create">
-<button onclick="createEmail()">Create Email</button>
-<button onclick="loadInbox()">Refresh Inbox</button>
-</div><div class="box" id="inbox">
-No mails yet...
-</div><script>
-let token = "";
-let address = "";
-
-async function createEmail() {
-  // get domain
-  let res = await fetch("https://api.mail.tm/domains");
-  let data = await res.json();
-  let domain = data["hydra:member"][0].domain;
-
-  // create account
-  let random = Math.random().toString(36).substring(2,10);
-  address = random + "@" + domain;
-
-  await fetch("https://api.mail.tm/accounts", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      address: address,
-      password: "12345678"
-    })
-  });
-
-  // login
-  let login = await fetch("https://api.mail.tm/token", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      address: address,
-      password: "12345678"
-    })
-  });
-
-  let loginData = await login.json();
-  token = loginData.token;
-
-  document.getElementById("email").value = address;
-  document.getElementById("inbox").innerHTML = "Email created. Wait for OTP...";
-}
-
-async function loadInbox() {
-  if (!token) {
-    alert("Create email first!");
-    return;
-  }
-
-  let res = await fetch("https://api.mail.tm/messages", {
-    headers: {
-      "Authorization": "Bearer " + token
-    }
-  });
-
-  let data = await res.json();
-
-  if (data["hydra:member"].length === 0) {
-    document.getElementById("inbox").innerHTML = "No messages yet...";
-    return;
-  }
-
-  let html = "";
-
-  for (let msg of data["hydra:member"]) {
-    html += `
-      <div class="mail">
-        <b>${msg.subject}</b><br>
-        From: ${msg.from.address}
-      </div>
-    `;
-  }
-
-  document.getElementById("inbox").innerHTML = html;
-}
-</script></body>
+</body>
 </html>
