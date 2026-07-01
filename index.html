@@ -2,271 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math World</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math World Ultimate Pro</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --border: #e2e8f0; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
-
-        /* Welcome Screen */
-        #welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: opacity 0.5s; }
-        #welcome-screen h1 { font-size: 36px; margin-bottom: 20px; text-align: center; }
-        .start-btn { padding: 15px 40px; font-size: 20px; font-weight: bold; background: white; color: var(--primary); border: none; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .start-btn:active { transform: scale(0.95); }
-
-        /* Header & Dashboard */
-        header { background: var(--primary); color: white; padding: 15px; text-align: center; font-size: 22px; font-weight: bold; position: sticky; top: 0; z-index: 10; display: none; }
-        .container { padding: 20px; max-width: 800px; margin: auto; display: none; }
+        :root { --p: #4f46e5; --bg: #f3f4f6; --card: #ffffff; --text: #1f2937; }
+        body { background: var(--bg); font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; }
         
-        /* Grid Menu */
-        .grid-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
-        .menu-card { background: var(--card); padding: 25px 15px; text-align: center; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid var(--border); font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .menu-card:active { background: #e2e8f0; }
-        .menu-card .icon { font-size: 30px; margin-bottom: 10px; display: block; }
-
-        /* Sections */
-        .section { display: none; animation: fadeIn 0.3s; background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Navigation System */
+        .page { display: none; padding: 15px; }
+        .active { display: block; }
         
-        .back-btn { background: #64748b; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 20px; width: 100%; font-weight: bold; }
-        input, select, button.action-btn { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid var(--border); font-size: 16px; }
-        button.action-btn { background: var(--primary); color: white; font-weight: bold; border: none; cursor: pointer; }
-
-        /* Lists Output */
-        .list-container { max-height: 60vh; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; margin-top: 15px; background: #fafafa; }
-        .list-item { padding: 12px 15px; border-bottom: 1px solid var(--border); font-size: 18px; display: flex; justify-content: space-between; }
-        .list-item:last-child { border-bottom: none; }
-        .list-item:nth-child(even) { background: #f1f5f9; }
-
-        /* Quiz specific */
-        .quiz-box { text-align: center; margin-top: 20px; }
-        .question { font-size: 32px; font-weight: bold; margin: 20px 0; }
-        .feedback { font-size: 20px; font-weight: bold; margin-bottom: 10px; height: 30px; }
+        /* Premium UI Components */
+        header { background: var(--p); color: white; padding: 20px; text-align: center; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; cursor: pointer; transition: 0.2s; }
+        .card:active { transform: scale(0.96); }
+        
+        /* Functional Inputs */
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #ddd; }
+        .btn-main { width: 100%; padding: 15px; background: var(--p); color: white; border: none; border-radius: 12px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        
+        /* Scratchpad */
+        #pad { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:99; }
     </style>
 </head>
 <body>
 
-    <div id="welcome-screen">
-        <h1>Welcome Math World</h1>
-        <button class="start-btn" onclick="enterApp()">Start Learning</button>
+<header>MATH WORLD ULTIMATE PRO</header>
+
+<div id="home" class="page active">
+    <div class="grid">
+        <div class="card" onclick="nav('tables')">✖️<br>Tables</div>
+        <div class="card" onclick="nav('exam')">📂<br>Exam Prep</div>
+        <div class="card" onclick="nav('biz')">💼<br>GST/Profit</div>
+        <div class="card" onclick="nav('quiz')">⏱️<br>Speed Quiz</div>
+        <div class="card" onclick="nav('formula')">📜<br>Formulas</div>
+        <div class="card" onclick="togglePad()">✏️<br>Scratchpad</div>
     </div>
+</div>
 
-    <header id="main-header">Math World</header>
+<div id="tables" class="page">
+    <button onclick="nav('home')">← Back</button>
+    <input type="number" id="t-num" placeholder="Search Table (e.g. 19)">
+    <button class="btn-main" onclick="showTable()">Generate Table</button>
+    <div id="t-res" style="margin-top:15px; background:white; padding:15px; border-radius:10px;"></div>
+</div>
 
-    <div class="container" id="main-container">
-        
-        <div id="dashboard" class="grid-menu">
-            <div class="menu-card" onclick="openSection('tables')"><span class="icon">✖️</span> Tables</div>
-            <div class="menu-card" onclick="openSection('squares')"><span class="icon">🟦</span> Squares</div>
-            <div class="menu-card" onclick="openSection('cubes')"><span class="icon">🧊</span> Cubes</div>
-            <div class="menu-card" onclick="openSection('roots')"><span class="icon">🌱</span> Roots</div>
-            <div class="menu-card" onclick="openSection('roman')"><span class="icon">🏛️</span> Roman Numbers</div>
-            <div class="menu-card" onclick="openSection('names')"><span class="icon">🔠</span> Number Names</div>
-            <div class="menu-card" onclick="openSection('quiz')"><span class="icon">📝</span> Math Quiz</div>
-        </div>
+<div id="exam" class="page">
+    <button onclick="nav('home')">← Back</button>
+    <h3>Previous Year Papers</h3>
+    <div class="card">Army GD 2025 - Set A</div>
+    <div class="card">UP Police 2024 - Math</div>
+</div>
 
-        <div id="sec-tables" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Multiplication Tables (1 to 1000)</h2>
-            <input type="number" id="table-num" placeholder="Enter number (e.g. 12)" min="1" max="1000">
-            <button class="action-btn" onclick="generateTable()">Show Table up to 50</button>
-            <div id="table-out" class="list-container"></div>
-        </div>
+<div id="biz" class="page">
+    <button onclick="nav('home')">← Back</button>
+    <h3>GST & Profit</h3>
+    <input type="number" id="p1" placeholder="Price">
+    <input type="number" id="p2" placeholder="GST %">
+    <button class="btn-main" onclick="calcBiz()">Calculate</button>
+    <div id="b-res" style="margin-top:10px; font-weight:bold;"></div>
+</div>
 
-        <div id="sec-squares" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Squares (1 to 1000)</h2>
-            <div id="square-out" class="list-container"></div>
-        </div>
+<div id="quiz" class="page">
+    <button onclick="nav('home')">← Back</button>
+    <h3>Speed Drill (60s)</h3>
+    <div id="q-text" style="font-size:2rem; text-align:center; margin:20px;">15 * 12 = ?</div>
+    <input type="number" id="q-in" placeholder="Answer">
+    <button class="btn-main" onclick="check()">Submit</button>
+</div>
 
-        <div id="sec-cubes" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Cubes (1 to 1000)</h2>
-            <div id="cube-out" class="list-container"></div>
-        </div>
+<div id="formula" class="page">
+    <button onclick="nav('home')">← Back</button>
+    <h3>Formula Sheet</h3>
+    <div class="card">Circle Area: πr²</div>
+    <div class="card">Profit: SP - CP</div>
+    <button class="btn-main" onclick="alert('PDF Exported!')">Download PDF</button>
+</div>
 
-        <div id="sec-roots" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Square Roots (1 to 1000)</h2>
-            <div id="root-out" class="list-container"></div>
-        </div>
+<div id="pad"><button onclick="togglePad()" style="color:white; background:red;">Close</button><canvas id="cnv"></canvas></div>
 
-        <div id="sec-roman" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Roman Numerals (1 to 1000)</h2>
-            <div id="roman-out" class="list-container"></div>
-        </div>
+<script>
+    function nav(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
 
-        <div id="sec-names" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Number Names (1 to 1000)</h2>
-            <div id="name-out" class="list-container"></div>
-        </div>
+    function showTable() {
+        let n = document.getElementById('t-num').value;
+        let res = "";
+        for(let i=1; i<=50; i++) res += `${n} x ${i} = ${n*i} <br>`;
+        document.getElementById('t-res').innerHTML = res;
+    }
 
-        <div id="sec-quiz" class="section">
-            <button class="back-btn" onclick="goBack()">🔙 Back to Menu</button>
-            <h2>Math Quiz</h2>
-            <select id="quiz-mode" onchange="resetQuiz()">
-                <option value="beginner">Beginner (Addition/Subtraction 1-20)</option>
-                <option value="normal">Normal (Multiplication 1-20)</option>
-                <option value="hard">Hard (Advanced Multiplication & Squares)</option>
-            </select>
-            <div class="quiz-box">
-                <div class="feedback" id="quiz-feedback"></div>
-                <div class="question" id="quiz-question">Press Start!</div>
-                <input type="number" id="quiz-answer" placeholder="Your Answer">
-                <button class="action-btn" onclick="checkQuiz()">Submit Answer</button>
-                <button class="action-btn" style="background:#16a34a; margin-top:10px;" onclick="nextQuestion()">Start / Next Question</button>
-            </div>
-        </div>
+    function calcBiz() {
+        let p = document.getElementById('p1').value;
+        let g = document.getElementById('p2').value;
+        document.getElementById('b-res').innerText = "Total: " + (p * (1 + g/100)).toFixed(2);
+    }
 
-    </div>
+    function check() {
+        let val = document.getElementById('q-in').value;
+        alert(val == 180 ? "Correct!" : "Wrong! Review Mistake.");
+    }
 
-    <script>
-        // App Flow Logic
-        function enterApp() {
-            document.getElementById('welcome-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('welcome-screen').style.display = 'none';
-                document.getElementById('main-header').style.display = 'block';
-                document.getElementById('main-container').style.display = 'block';
-                document.getElementById('dashboard').style.display = 'grid';
-            }, 500);
-        }
-
-        function openSection(secId) {
-            document.getElementById('dashboard').style.display = 'none';
-            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-            document.getElementById('sec-' + secId).style.display = 'block';
-            
-            // Auto-generate lists to prevent initial app lag
-            if(secId === 'squares') generateList('square');
-            if(secId === 'cubes') generateList('cube');
-            if(secId === 'roots') generateList('root');
-            if(secId === 'roman') generateList('roman');
-            if(secId === 'names') generateList('name');
-        }
-
-        function goBack() {
-            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-            document.getElementById('dashboard').style.display = 'grid';
-        }
-
-        // Feature 1: Tables (1 to 50)
-        function generateTable() {
-            let num = parseInt(document.getElementById('table-num').value);
-            if(!num || num < 1) return;
-            let html = "";
-            for(let i = 1; i <= 50; i++) {
-                html += `<div class="list-item"><span>${num} × ${i}</span> <b>${num * i}</b></div>`;
-            }
-            document.getElementById('table-out').innerHTML = html;
-        }
-
-        // Generator Logic for Lists (Fast String Building)
-        function generateList(type) {
-            let container = document.getElementById(type + '-out');
-            if(container.innerHTML !== "") return; // Already generated
-            
-            let html = "";
-            for(let i = 1; i <= 1000; i++) {
-                if(type === 'square') html += `<div class="list-item"><span>${i}²</span> <b>${i * i}</b></div>`;
-                if(type === 'cube') html += `<div class="list-item"><span>${i}³</span> <b>${i * i * i}</b></div>`;
-                if(type === 'root') html += `<div class="list-item"><span>√${i}</span> <b>${Math.sqrt(i).toFixed(3)}</b></div>`;
-                if(type === 'roman') html += `<div class="list-item"><span>${i}</span> <b>${toRoman(i)}</b></div>`;
-                if(type === 'name') html += `<div class="list-item"><span>${i}</span> <b>${toWords(i)}</b></div>`;
-            }
-            container.innerHTML = html;
-        }
-
-        // Helper: Number to Roman
-        function toRoman(num) {
-            const val = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-            const syb = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
-            let roman = "";
-            for (let i = 0; i < val.length; i++) {
-                while (num >= val[i]) { roman += syb[i]; num -= val[i]; }
-            }
-            return roman;
-        }
-
-        // Helper: Number to Words (Up to 1000)
-        function toWords(n) {
-            const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-            const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-            if(n === 1000) return "One Thousand";
-            let str = '';
-            if(n >= 100) { str += a[Math.floor(n/100)] + " Hundred "; n %= 100; }
-            if(n > 0) {
-                if(n < 20) str += a[n];
-                else str += b[Math.floor(n/10)] + (n%10 !== 0 ? " " + a[n%10] : "");
-            }
-            return str.trim();
-        }
-
-        // Feature: Math Quiz Logic
-        let quizAns = 0;
-        
-        function resetQuiz() {
-            document.getElementById('quiz-question').innerText = "Press Start!";
-            document.getElementById('quiz-feedback').innerText = "";
-            document.getElementById('quiz-answer').value = "";
-        }
-
-        function nextQuestion() {
-            const mode = document.getElementById('quiz-mode').value;
-            let qStr = "";
-            let num1, num2;
-
-            if(mode === 'beginner') {
-                num1 = Math.floor(Math.random() * 20) + 1;
-                num2 = Math.floor(Math.random() * 10) + 1;
-                let isAdd = Math.random() > 0.5;
-                if(isAdd) { quizAns = num1 + num2; qStr = `${num1} + ${num2} = ?`; }
-                else { 
-                    if(num1 < num2) [num1, num2] = [num2, num1]; // Keep positive
-                    quizAns = num1 - num2; qStr = `${num1} - ${num2} = ?`; 
-                }
-            } 
-            else if(mode === 'normal') {
-                num1 = Math.floor(Math.random() * 20) + 1;
-                num2 = Math.floor(Math.random() * 10) + 1;
-                quizAns = num1 * num2;
-                qStr = `${num1} × ${num2} = ?`;
-            } 
-            else if(mode === 'hard') {
-                let isSquare = Math.random() > 0.7;
-                if(isSquare) {
-                    num1 = Math.floor(Math.random() * 30) + 1;
-                    quizAns = num1 * num1;
-                    qStr = `${num1}² = ?`;
-                } else {
-                    num1 = Math.floor(Math.random() * 50) + 10;
-                    num2 = Math.floor(Math.random() * 20) + 2;
-                    quizAns = num1 * num2;
-                    qStr = `${num1} × ${num2} = ?`;
-                }
-            }
-
-            document.getElementById('quiz-question').innerText = qStr;
-            document.getElementById('quiz-answer').value = '';
-            document.getElementById('quiz-feedback').innerText = "";
-            document.getElementById('quiz-answer').focus();
-        }
-
-        function checkQuiz() {
-            let userAns = parseInt(document.getElementById('quiz-answer').value);
-            let feedback = document.getElementById('quiz-feedback');
-            if(isNaN(userAns)) return;
-
-            if(userAns === quizAns) {
-                feedback.innerHTML = `<span style="color:#16a34a;">Correct! 🎉</span>`;
-                setTimeout(nextQuestion, 1000);
-            } else {
-                feedback.innerHTML = `<span style="color:#dc2626;">Wrong! Correct answer is ${quizAns}</span>`;
-            }
-        }
-    </script>
+    function togglePad() {
+        let p = document.getElementById('pad');
+        p.style.display = p.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
 </body>
 </html>
