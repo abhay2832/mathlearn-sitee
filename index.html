@@ -107,7 +107,7 @@
         </div>
 
         <h3 style="margin-top:35px; border-top: 1px solid var(--card-border); padding-top: 15px;">Mathematics Modules</h3>
-        <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">Select a module to view syllabus topics.</p>
+        <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">Select a module to solve problems.</p>
         <div class="grid">
             <div class="glass-card" onclick="openTopic('arithmetic')"><span class="icon">🔢</span><h3>Basic Arithmetic</h3></div>
             <div class="glass-card" onclick="openTopic('percentage')"><span class="icon">⚖️</span><h3>Percent & Ratio</h3></div>
@@ -124,8 +124,8 @@
 
     <div id="page-topic" class="page">
         <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
-        <h2 id="topic-title">Module Syllabus</h2>
-        <div class="list-grid" id="topic-list" style="grid-template-columns: 1fr;"></div>
+        <h2 id="topic-title">Module Title</h2>
+        <div id="topic-list"></div>
     </div>
 
     <div id="page-tables" class="page">
@@ -315,29 +315,175 @@
             }
         }
 
-        /* --- MODULE TOPICS DATA & FUNCTION --- */
+        /* --- NEW SMART CALCULATOR LOGIC FOR 10 MODULES --- */
         const mathTopics = {
-            arithmetic: { title: "1. Basic Arithmetic", items: ["Numbers (Natural, Whole, Integers)", "BODMAS", "Addition, Subtraction, Multiplication, Division", "Tables (2–30)", "Squares (1–50)", "Cubes (1–30)", "Fractions", "Decimals", "HCF & LCM", "Divisibility Rules"] },
-            percentage: { title: "2. Percentage & Ratio", items: ["Percentage", "Ratio & Proportion", "Partnership", "Average", "Mixture & Alligation"] },
-            profit: { title: "3. Profit & Loss", items: ["Profit & Loss", "Discount", "Simple Interest (SI)", "Compound Interest (CI)"] },
-            time: { title: "4. Time Based Topics", items: ["Time & Work", "Pipes & Cistern", "Time, Speed & Distance", "Train", "Boat & Stream"] },
-            algebra: { title: "5. Algebra", items: ["Algebraic Identities", "Linear Equations", "Quadratic Equations", "Simplification"] },
-            geometry: { title: "6. Geometry", items: ["Lines & Angles", "Triangle", "Circle", "Quadrilateral", "Polygon", "Coordinate Geometry (Basic)"] },
-            mensuration: { title: "7. Mensuration", items: ["Perimeter", "Area", "Surface Area", "Volume", "2D & 3D Figures"] },
-            trigo: { title: "8. Trigonometry", items: ["Trigonometric Ratios", "Heights & Distances", "Important Values", "Basic Identities"] },
-            stats: { title: "9. Statistics & Data Interpretation", items: ["Mean", "Median", "Mode", "Pie Chart", "Bar Graph", "Line Graph", "Table"] },
-            advanced: { title: "10. Advanced Arithmetic", items: ["Number System", "Surds & Indices", "Logarithm", "Permutation & Combination", "Probability", "Set Theory"] }
+            arithmetic: {
+                title: "Arithmetic (HCF & LCM)",
+                items: ["Numbers", "BODMAS", "HCF & LCM", "Fractions"],
+                inputs: [{id: "mod_num1", type: "number", placeholder: "Enter First Number"}, {id: "mod_num2", type: "number", placeholder: "Enter Second Number"}],
+                calc: function() {
+                    let n1 = parseFloat(document.getElementById('mod_num1').value);
+                    let n2 = parseFloat(document.getElementById('mod_num2').value);
+                    if(!n1 || !n2) return "Please enter both numbers.";
+                    let a = n1, b = n2;
+                    while(b !== 0) { let temp = b; b = a % b; a = temp; }
+                    let hcf = Math.abs(a); 
+                    let lcm = Math.abs((n1 * n2) / hcf);
+                    return `<b>Steps:</b> Prime factorization method.<br><b>Short Trick:</b> LCM = (Num1 × Num2) / HCF<br><br><span style='color:var(--success); font-size:1.2rem;'><b>HCF:</b> ${hcf} <br><b>LCM:</b> ${lcm}</span>`;
+                }
+            },
+            percentage: {
+                title: "Percentage Finder",
+                items: ["Percentage", "Ratio & Proportion", "Average"],
+                inputs: [{id: "mod_val", type: "number", placeholder: "Value (e.g., Marks Obtained)"}, {id: "mod_total", type: "number", placeholder: "Total (e.g., Total Marks)"}],
+                calc: function() {
+                    let v = parseFloat(document.getElementById('mod_val').value);
+                    let t = parseFloat(document.getElementById('mod_total').value);
+                    if(!v || !t) return "Please enter valid numbers.";
+                    let p = ((v / t) * 100).toFixed(2);
+                    return `<b>Steps:</b> (Value / Total) × 100<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Result:</b> ${p}%</span>`;
+                }
+            },
+            profit: {
+                title: "Profit & Loss Calculator",
+                items: ["Profit & Loss", "Discount", "SI", "CI"],
+                inputs: [{id: "mod_cp", type: "number", placeholder: "Enter Cost Price (CP)"}, {id: "mod_sp", type: "number", placeholder: "Enter Selling Price (SP)"}],
+                calc: function() {
+                    let cp = parseFloat(document.getElementById('mod_cp').value);
+                    let sp = parseFloat(document.getElementById('mod_sp').value);
+                    if(!cp || !sp) return "Please enter CP and SP.";
+                    if(sp > cp) {
+                        let p = sp - cp; let pp = ((p/cp)*100).toFixed(2);
+                        return `<b>Condition:</b> SP is greater than CP (Profit)<br><b>Short Trick:</b> Profit % = (Profit / CP) × 100<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Profit Amount:</b> ₹${p} <br><b>Profit %:</b> ${pp}%</span>`;
+                    } else if(cp > sp) {
+                        let l = cp - sp; let lp = ((l/cp)*100).toFixed(2);
+                        return `<b>Condition:</b> CP is greater than SP (Loss)<br><b>Short Trick:</b> Loss % = (Loss / CP) × 100<br><br><span style='color:var(--danger); font-size:1.2rem;'><b>Loss Amount:</b> ₹${l} <br><b>Loss %:</b> ${lp}%</span>`;
+                    } else {
+                        return `<span style='color:var(--warning); font-size:1.2rem;'><b>No Profit No Loss (Break Even)</b></span>`;
+                    }
+                }
+            },
+            time: {
+                title: "Time & Work Solver",
+                items: ["Time & Work", "Pipes & Cistern", "Speed Distance"],
+                inputs: [{id: "mod_a", type: "number", placeholder: "A can do work in (Days)"}, {id: "mod_b", type: "number", placeholder: "B can do work in (Days)"}],
+                calc: function() {
+                    let a = parseFloat(document.getElementById('mod_a').value);
+                    let b = parseFloat(document.getElementById('mod_b').value);
+                    if(!a || !b) return "Please enter days for both A and B.";
+                    let ans = ((a*b)/(a+b)).toFixed(2);
+                    return `<b>Steps:</b> A's 1 day work = 1/${a}. B's 1 day work = 1/${b}.<br><b>Short Trick:</b> Time = (A × B) / (A + B)<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Together they will finish in:</b> ${ans} days</span>`;
+                }
+            },
+            algebra: {
+                title: "Algebra (Roots of ax² + bx + c)",
+                items: ["Linear Eq", "Quadratic Eq", "Simplification"],
+                inputs: [{id: "mod_qa", type: "number", placeholder: "Value of a"}, {id: "mod_qb", type: "number", placeholder: "Value of b"}, {id: "mod_qc", type: "number", placeholder: "Value of c"}],
+                calc: function() {
+                    let a = parseFloat(document.getElementById('mod_qa').value);
+                    let b = parseFloat(document.getElementById('mod_qb').value);
+                    let c = parseFloat(document.getElementById('mod_qc').value);
+                    if(!a) return "Please enter valid values. 'a' cannot be 0.";
+                    let d = (b*b) - (4*a*c);
+                    if(d < 0) return `Discriminant (D) = ${d}.<br><span style='color:var(--danger);'>Roots are imaginary.</span>`;
+                    let r1 = ((-b + Math.sqrt(d)) / (2*a)).toFixed(2);
+                    let r2 = ((-b - Math.sqrt(d)) / (2*a)).toFixed(2);
+                    return `<b>Equation:</b> ${a}x² + ${b}x + ${c} = 0<br><b>Discriminant (D):</b> b² - 4ac = ${d}<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Roots:</b> ${r1} and ${r2}</span>`;
+                }
+            },
+            geometry: {
+                title: "Geometry (Triangle Area)",
+                items: ["Lines & Angles", "Triangle", "Circle"],
+                inputs: [{id: "mod_base", type: "number", placeholder: "Base of Triangle"}, {id: "mod_height", type: "number", placeholder: "Height of Triangle"}],
+                calc: function() {
+                    let b = parseFloat(document.getElementById('mod_base').value);
+                    let h = parseFloat(document.getElementById('mod_height').value);
+                    if(!b || !h) return "Please enter base and height.";
+                    let area = (0.5 * b * h).toFixed(2);
+                    return `<b>Formula:</b> Area = 1/2 × Base × Height<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Area:</b> ${area} sq units</span>`;
+                }
+            },
+            mensuration: {
+                title: "Mensuration (Circle Calculator)",
+                items: ["Area", "Volume", "Perimeter", "2D/3D Figures"],
+                inputs: [{id: "mod_rad", type: "number", placeholder: "Enter Radius of Circle"}],
+                calc: function() {
+                    let r = parseFloat(document.getElementById('mod_rad').value);
+                    if(!r) return "Please enter radius.";
+                    let area = (Math.PI * r * r).toFixed(2);
+                    let circum = (2 * Math.PI * r).toFixed(2);
+                    return `<b>Formulas:</b> Area = πr², Circumference = 2πr<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Area:</b> ${area} sq units<br><b>Circumference:</b> ${circum} units</span>`;
+                }
+            },
+            trigo: {
+                title: "Trigonometry Values",
+                items: ["Ratios", "Heights & Distances"],
+                inputs: [{id: "mod_deg", type: "number", placeholder: "Enter Angle (in Degrees, e.g., 45)"}],
+                calc: function() {
+                    let d = parseFloat(document.getElementById('mod_deg').value);
+                    if(isNaN(d)) return "Please enter an angle.";
+                    let rad = d * (Math.PI / 180);
+                    return `<b>Trigonometric Ratios for ${d}°:</b><br><br><span style='color:var(--primary); font-size:1.2rem;'><b>Sin:</b> ${Math.sin(rad).toFixed(4)}<br><b>Cos:</b> ${Math.cos(rad).toFixed(4)}<br><b>Tan:</b> ${(Math.cos(rad)===0)?'Infinity':Math.tan(rad).toFixed(4)}</span>`;
+                }
+            },
+            stats: {
+                title: "Statistics (Mean Average)",
+                items: ["Mean", "Median", "Mode", "Charts"],
+                inputs: [{id: "mod_stats", type: "text", placeholder: "Enter numbers separated by commas (e.g., 2,5,8)"}],
+                calc: function() {
+                    let val = document.getElementById('mod_stats').value;
+                    if(!val) return "Please enter numbers.";
+                    let arr = val.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+                    if(arr.length === 0) return "Invalid input.";
+                    let sum = arr.reduce((a,b)=>a+b,0);
+                    let mean = (sum / arr.length).toFixed(2);
+                    return `<b>Formula:</b> Sum of values / Number of values<br>Total Values: ${arr.length}, Sum: ${sum}<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Mean (Average):</b> ${mean}</span>`;
+                }
+            },
+            advanced: {
+                title: "Advanced (Simple Interest)",
+                items: ["Number System", "Probability", "Interest"],
+                inputs: [{id: "mod_p", type: "number", placeholder: "Principal Amount (P)"}, {id: "mod_r", type: "number", placeholder: "Rate of Interest (R) %"}, {id: "mod_t", type: "number", placeholder: "Time (T) in years"}],
+                calc: function() {
+                    let p = parseFloat(document.getElementById('mod_p').value);
+                    let r = parseFloat(document.getElementById('mod_r').value);
+                    let t = parseFloat(document.getElementById('mod_t').value);
+                    if(!p || !r || !t) return "Enter P, R, and T.";
+                    let si = ((p * r * t) / 100).toFixed(2);
+                    let amt = (parseFloat(p) + parseFloat(si)).toFixed(2);
+                    return `<b>Short Trick Formula:</b> SI = (P × R × T) / 100<br><br><span style='color:var(--success); font-size:1.2rem;'><b>Simple Interest (SI):</b> ₹${si}<br><b>Total Amount:</b> ₹${amt}</span>`;
+                }
+            }
         };
 
         function openTopic(id) {
             let topic = mathTopics[id];
             document.getElementById('topic-title').innerText = topic.title;
-            let html = '';
-            topic.items.forEach(item => {
-                html += `<div class="list-item" style="justify-content:flex-start;"><span>${item}</span></div>`;
+            
+            let html = `<div style="text-align:left; margin-bottom:15px; font-size:0.95rem; opacity:0.8;"><b>Topics Covered:</b> ${topic.items.join(', ')}</div>`;
+            
+            // Build the Smart Calculator Form
+            html += `<div class="exam-box" style="text-align:left; border-top:3px solid var(--primary);">
+                <h3 style="color:var(--primary); margin-bottom:15px;">Smart Calculator</h3>
+                <div class="panel" style="flex-direction:column; gap:12px; padding:0; background:transparent; border:none; box-shadow:none;">`;
+                
+            topic.inputs.forEach(inp => {
+                html += `<input type="${inp.type}" id="${inp.id}" placeholder="${inp.placeholder}" style="width:100%; padding:14px; border-radius:8px; border:2px solid rgba(128,128,128,0.2); outline:none; font-size:1rem;">`;
             });
+            
+            html += `<button class="btn" onclick="calculateModule('${id}')" style="width:100%; margin-top:10px; padding:15px; font-size:1.1rem;">Calculate Answer</button>
+                </div>
+                <div id="module-output" style="margin-top:20px; padding:15px; background:rgba(79,70,229,0.1); border-radius:8px; display:none; border-left: 5px solid var(--primary); color:var(--text); line-height:1.6;"></div>
+            </div>`;
+            
             document.getElementById('topic-list').innerHTML = html;
             openPage('topic');
+        }
+
+        function calculateModule(id) {
+            let out = document.getElementById('module-output');
+            out.style.display = 'block';
+            out.innerHTML = mathTopics[id].calc();
         }
 
         /* --- TABLES --- */
@@ -380,7 +526,7 @@
             document.getElementById('dyn-list').innerHTML = html;
         }
 
-        /* --- SMART SOLVER --- */
+        /* --- SMART SOLVER (BODMAS) --- */
         function solveEquation() {
             let eq = document.getElementById('solve-in').value;
             let out = document.getElementById('solve-out');
@@ -655,4 +801,5 @@
         }
     </script>
 </body>
-</html>tistics & Data I
+</html>
+  
