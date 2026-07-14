@@ -363,4 +363,211 @@
             
             let grid = document.getElementById('q-options');
             grid.innerHTML = '';
-           
+            
+            opts.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if (opt === qAns) {
+                        btn.classList.add('correct');
+                        qScore++;
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                    setTimeout(nextQ, 250);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function endQuiz() {
+            clearInterval(qTimer);
+            document.getElementById('quiz-play').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'block';
+            document.getElementById('qr-score').innerText = `Score: ${qScore}`;
+            
+            let highscore = parseInt(localStorage.getItem('ml_highscore') || '0');
+            if(qScore > highscore) {
+                localStorage.setItem('ml_highscore', qScore);
+                showToast("New High Score! 🎉");
+                updateStats();
+            }
+        }
+
+        /* --- MOCK TEST --- */
+        let mData = [
+            { q: "What is 15% of 200?", o: ["25", "30", "35", "40"], a: "30" },
+            { q: "LCM of 12 and 18?", o: ["36", "24", "48", "72"], a: "36" },
+            { q: "√144 + √25 = ?", o: ["15", "16", "17", "18"], a: "17" },
+            { q: "Speed = 72 km/h. Convert to m/s.", o: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], a: "20 m/s" },
+            { q: "Average of first 5 natural numbers?", o: ["2", "3", "4", "5"], a: "3" }
+        ];
+        let mIndex, mScore;
+
+        function startMock() {
+            document.getElementById('mock-setup').style.display = 'none';
+            document.getElementById('mock-play').style.display = 'block';
+            document.getElementById('mock-result').style.display = 'none';
+            mIndex = 0; mScore = 0;
+            loadMockQ();
+        }
+
+        function loadMockQ() {
+            if(mIndex >= mData.length) return endMock();
+            
+            document.getElementById('m-count').innerText = `Q ${mIndex + 1}/${mData.length}`;
+            let currentQ = mData[mIndex];
+            document.getElementById('m-text').innerText = currentQ.q;
+            
+            let grid = document.getElementById('m-options');
+            grid.innerHTML = '';
+            
+            currentQ.o.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    if(opt === currentQ.a) {
+                        btn.classList.add('correct');
+                        mScore += 2;
+                    } else {
+                        btn.classList.add('wrong');
+                        mScore -= 0.5;
+                    }
+                    setTimeout(() => { mIndex++; loadMockQ(); }, 350);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function endMock() {
+            document.getElementById('mock-play').style.display = 'none';
+            document.getElementById('mock-result').style.display = 'block';
+            
+            let status = mScore >= 5 ? '<span style="color:var(--success)">Pass ✅</span>' : '<span style="color:var(--danger)">Fail ❌</span>';
+            
+            document.getElementById('mr-stats').innerHTML = `
+                Attempted: 5/5<br>
+                Correct Marks: +${(mScore > 0 && mScore % 1 !== 0) || mScore < 0 ? 'N/A' : mScore} <br>
+                <b>Total Score: ${mScore} / 10</b><br><br>
+                Result: ${status}
+            `;
+        }
+
+        /* --- PREVIOUS PAPERS --- */
+        function loadPaper() {
+            let paper = document.getElementById('paper-select').value;
+            let content = document.getElementById('paper-content');
+            content.style.display = 'block';
+            
+            if(paper === 'army') {
+                content.innerHTML = `<div class="exam-box" style="text-align:left;">
+                    <h3 style="color:var(--primary); margin-bottom:10px;">Army GD 2024 Syllabus Focus</h3>
+                    <ul style="padding-left:20px; line-height:1.6;">
+                        <li>Fractions & Decimals</li>
+                        <li>Percentage & Average</li>
+                        <li>Profit, Loss & Discount</li>
+                        <li>Simple & Compound Interest</li>
+                    </ul>
+                    <p style="margin-top:15px; font-style:italic;">Note: This is a demo overview module.</p>
+                </div>`;
+            } else if(paper === 'up') {
+                content.innerHTML = `<div class="exam-box" style="text-align:left;">
+                    <h3 style="color:var(--primary); margin-bottom:10px;">UP Police 2023 Math Focus</h3>
+                    <ul style="padding-left:20px; line-height:1.6;">
+                        <li>Number System & Simplification</li>
+                        <li>Time, Work & Distance</li>
+                        <li>Mensuration (2D & 3D)</li>
+                        <li>Data Interpretation (Graphs)</li>
+                    </ul>
+                    <p style="margin-top:15px; font-style:italic;">Note: This is a demo overview module.</p>
+                </div>`;
+            } else {
+                content.style.display = 'none';
+            }
+        }
+
+        /* --- TIMETABLE --- */
+        function addTask() {
+            let task = document.getElementById('tt-task').value;
+            let time = document.getElementById('tt-time').value;
+            
+            if(!task || !time) return showToast("Please enter both Task and Time!");
+            
+            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
+            tasks.push({ id: Date.now(), task: task, time: time });
+            
+            // Sort by time
+            tasks.sort((a, b) => a.time.localeCompare(b.time));
+            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
+            
+            document.getElementById('tt-task').value = '';
+            document.getElementById('tt-time').value = '';
+            loadTasks();
+            showToast("Task Added!");
+        }
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
+            let list = document.getElementById('tt-list');
+            list.innerHTML = '';
+            
+            if(tasks.length === 0) {
+                list.innerHTML = '<p style="text-align:center; opacity:0.6; padding:20px;">No tasks scheduled yet.</p>';
+                return;
+            }
+            
+            tasks.forEach(t => {
+                let div = document.createElement('div');
+                div.className = 'list-item';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <div>
+                        <span style="font-weight:bold; color:var(--primary);">${t.time}</span><br>
+                        <span style="font-size:0.95rem;">${t.task}</span>
+                    </div>
+                    <button class="btn btn-outline" style="padding:5px 10px;" onclick="deleteTask(${t.id})">❌</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteTask(id) {
+            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        /* --- PROGRESS & SETTINGS --- */
+        function updateStats() {
+            let score = localStorage.getItem('ml_highscore') || '0';
+            document.getElementById('p-score').innerText = score;
+            
+            // Basic Streak calculation logic
+            let streak = parseInt(localStorage.getItem('ml_streak') || '1');
+            let lastDate = localStorage.getItem('ml_lastDate');
+            let today = new Date().toDateString();
+            
+            if (lastDate !== today) {
+                localStorage.setItem('ml_lastDate', today);
+                if (lastDate) { 
+                    // Increment streak only if they login on a new day
+                    streak++; 
+                    localStorage.setItem('ml_streak', streak);
+                }
+            }
+            document.getElementById('p-streak').innerText = streak;
+        }
+
+        function resetData() {
+            if(confirm("Are you sure? This will delete your high score, timetable, and settings.")) {
+                localStorage.clear();
+                showToast("Data Reset Successful!");
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+    </script>
+</body>
+</html>
