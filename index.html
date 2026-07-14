@@ -325,4 +325,334 @@
             geometry: { title: "6. Geometry", items: ["Lines & Angles", "Triangle", "Circle", "Quadrilateral", "Polygon", "Coordinate Geometry (Basic)"] },
             mensuration: { title: "7. Mensuration", items: ["Perimeter", "Area", "Surface Area", "Volume", "2D & 3D Figures"] },
             trigo: { title: "8. Trigonometry", items: ["Trigonometric Ratios", "Heights & Distances", "Important Values", "Basic Identities"] },
-            stats: { title: "9. Statistics & Data I
+            stats: { title: "9. Statistics & Data Interpretation", items: ["Mean", "Median", "Mode", "Pie Chart", "Bar Graph", "Line Graph", "Table"] },
+            advanced: { title: "10. Advanced Arithmetic", items: ["Number System", "Surds & Indices", "Logarithm", "Permutation & Combination", "Probability", "Set Theory"] }
+        };
+
+        function openTopic(id) {
+            let topic = mathTopics[id];
+            document.getElementById('topic-title').innerText = topic.title;
+            let html = '';
+            topic.items.forEach(item => {
+                html += `<div class="list-item" style="justify-content:flex-start;"><span>${item}</span></div>`;
+            });
+            document.getElementById('topic-list').innerHTML = html;
+            openPage('topic');
+        }
+
+        /* --- TABLES --- */
+        function genTable() {
+            let n = parseInt(document.getElementById('t-num').value);
+            let f = document.getElementById('t-filt').value;
+            if(!n || n < 2) return showToast("Enter valid table number!");
+            
+            let html = "";
+            if(f && f > 0) {
+                html = `<div class="list-item"><span>${n} × ${f}</span> <b>${n*f}</b></div>`;
+            } else {
+                for(let i=1; i<=50; i++) html += `<div class="list-item"><span>${n} × ${i}</span> <b>${n*i}</b></div>`;
+            }
+            document.getElementById('t-list').innerHTML = html;
+        }
+
+        /* --- DYNAMIC (Squares, Cubes, Roots) --- */
+        let currDyn = '';
+        function setupDynamic(mode) {
+            currDyn = mode;
+            document.getElementById('dyn-search').value = '';
+            document.getElementById('dyn-title').innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
+            openPage('dynamic'); 
+            filterDynamic();
+        }
+        function filterDynamic() {
+            let f = document.getElementById('dyn-search').value.trim();
+            let html = ""; 
+            let count = 0;
+            for(let i=1; i<=1000; i++) {
+                if(f && !i.toString().startsWith(f)) continue;
+                if(count > 100) break; 
+                
+                let v = currDyn==='squares' ? i*i : currDyn==='cubes' ? i*i*i : Math.sqrt(i).toFixed(3);
+                let sym = currDyn==='squares' ? '²' : currDyn==='cubes' ? '³' : '√';
+                html += `<div class="list-item"><span>${currDyn==='roots'?sym+i:i+sym}</span> <b>${v}</b></div>`;
+                count++;
+            }
+            document.getElementById('dyn-list').innerHTML = html;
+        }
+
+        /* --- SMART SOLVER --- */
+        function solveEquation() {
+            let eq = document.getElementById('solve-in').value;
+            let out = document.getElementById('solve-out');
+            if(!eq) return showToast("Enter an equation");
+            try {
+                let sanitized = eq.replace(/[^0-9+\-*/(). ]/g, ''); 
+                let ans = Function('"use strict";return (' + sanitized + ')')();
+                out.style.display = 'block';
+                out.innerHTML = `
+                    <div style="color:var(--primary); margin-bottom:10px;"><b>Rule: BODMAS applied</b></div>
+                    <div><b>Equation:</b> ${sanitized}</div>
+                    <div style="font-size:1.5rem; color:var(--success); margin-top:10px;"><b>Answer = ${ans}</b></div>
+                `;
+            } catch(e) {
+                showToast("Invalid Equation. Use basic operators (+, -, *, /)");
+            }
+        }
+
+        /* --- SPEED QUIZ --- */
+        let qTime, qTimer, qScore, qAns;
+        function startQuiz() {
+            document.getElementById('quiz-setup').style.display = 'none';
+            document.getElementById('quiz-play').style.display = 'block';
+            document.getElementById('quiz-result').style.display = 'none';
+            qScore = 0; 
+            qTime = 60;
+            nextQ();
+            
+            if(qTimer) clearInterval(qTimer);
+            qTimer = setInterval(() => {
+                qTime--;
+                document.getElementById('q-timer').innerText = `⏱ ${qTime}s`;
+                if(qTime <= 0) endQuiz();
+            }, 1000);
+        }
+
+        function nextQ() {
+            let cat = document.getElementById('q-cat').value;
+            document.getElementById('q-score').innerText = `Score: ${qScore}`;
+            
+            let n1 = Math.floor(Math.random() * 15) + 2;
+            let n2 = Math.floor(Math.random() * 10) + 1;
+            
+            if(cat === 'mult' || (cat==='mix' && Math.random()>0.5)) {
+                qAns = n1 * n2; document.getElementById('q-text').innerText = `${n1} × ${n2} = ?`;
+            } else {
+                n1 = n1 * 4; qAns = n1 + n2; document.getElementById('q-text').innerText = `${n1} + ${n2} = ?`;
+            }
+            
+            let opts = [qAns];
+            while(opts.length < 4) {
+                let f = qAns + (Math.floor(Math.random() * 20) - 10);
+                if(!opts.includes(f) && f > 0) opts.push(f);
+            }
+            opts.sort(() => Math.random() - 0.5);
+            
+            let grid = document.getElementById('q-options');
+            grid.innerHTML = '';
+            
+            opts.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    let allBtns = grid.querySelectorAll('.opt-btn');
+                    allBtns.forEach(b => b.disabled = true);
+                    
+                    if (opt === qAns) {
+                        btn.classList.add('correct');
+                        qScore++;
+                    } else {
+                        btn.classList.add('wrong');
+                    }
+                    setTimeout(nextQ, 250);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function endQuiz() {
+            clearInterval(qTimer);
+            document.getElementById('quiz-play').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'block';
+            document.getElementById('qr-score').innerText = `Score: ${qScore}`;
+            
+            let highscore = parseInt(localStorage.getItem('ml_highscore') || '0');
+            if(qScore > highscore) {
+                localStorage.setItem('ml_highscore', qScore);
+                showToast("New High Score! 🎉");
+                updateStats();
+            }
+        }
+
+        /* --- MOCK TEST --- */
+        let mData = [
+            { q: "What is 15% of 200?", o: ["25", "30", "35", "40"], a: "30" },
+            { q: "LCM of 12 and 18?", o: ["36", "24", "48", "72"], a: "36" },
+            { q: "√144 + √25 = ?", o: ["15", "16", "17", "18"], a: "17" },
+            { q: "Speed = 72 km/h. Convert to m/s.", o: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], a: "20 m/s" },
+            { q: "Average of first 5 natural numbers?", o: ["2", "3", "4", "5"], a: "3" }
+        ];
+        let mIndex, mScore;
+
+        function startMock() {
+            document.getElementById('mock-setup').style.display = 'none';
+            document.getElementById('mock-play').style.display = 'block';
+            document.getElementById('mock-result').style.display = 'none';
+            mIndex = 0; 
+            mScore = 0;
+            loadMockQ();
+        }
+
+        function loadMockQ() {
+            if(mIndex >= mData.length) return endMock();
+            
+            document.getElementById('m-count').innerText = `Q ${mIndex + 1}/${mData.length}`;
+            let currentQ = mData[mIndex];
+            document.getElementById('m-text').innerText = currentQ.q;
+            
+            let grid = document.getElementById('m-options');
+            grid.innerHTML = '';
+            
+            currentQ.o.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    let allBtns = grid.querySelectorAll('.opt-btn');
+                    allBtns.forEach(b => b.disabled = true);
+
+                    if(opt === currentQ.a) {
+                        btn.classList.add('correct');
+                        mScore += 2;
+                    } else {
+                        btn.classList.add('wrong');
+                        mScore -= 0.5;
+                    }
+                    setTimeout(() => { mIndex++; loadMockQ(); }, 350);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function endMock() {
+            document.getElementById('mock-play').style.display = 'none';
+            document.getElementById('mock-result').style.display = 'block';
+            
+            let status = mScore >= 5 ? '<span style="color:var(--success)">Pass ✅</span>' : '<span style="color:var(--danger)">Fail ❌</span>';
+            
+            document.getElementById('mr-stats').innerHTML = `
+                Attempted: 5/5<br>
+                Correct Marks: +${(mScore > 0 && mScore % 1 !== 0) || mScore < 0 ? 'N/A' : mScore} <br>
+                <b>Total Score: ${mScore} / 10</b><br><br>
+                Result: ${status}
+            `;
+        }
+
+        /* --- PREVIOUS PAPERS --- */
+        function loadPaper() {
+            let paper = document.getElementById('paper-select').value;
+            let content = document.getElementById('paper-content');
+            content.style.display = 'block';
+            
+            if(paper === 'army') {
+                content.innerHTML = `<div class="exam-box" style="text-align:left;">
+                    <h3 style="color:var(--primary); margin-bottom:10px;">Army GD 2024 Syllabus Focus</h3>
+                    <ul style="padding-left:20px; line-height:1.6;">
+                        <li>Fractions & Decimals</li>
+                        <li>Percentage & Average</li>
+                        <li>Profit, Loss & Discount</li>
+                        <li>Simple & Compound Interest</li>
+                    </ul>
+                </div>`;
+            } else if(paper === 'up') {
+                content.innerHTML = `<div class="exam-box" style="text-align:left;">
+                    <h3 style="color:var(--primary); margin-bottom:10px;">UP Police 2023 Math Focus</h3>
+                    <ul style="padding-left:20px; line-height:1.6;">
+                        <li>Number System & Simplification</li>
+                        <li>Time, Work & Distance</li>
+                        <li>Mensuration (2D & 3D)</li>
+                        <li>Data Interpretation (Graphs)</li>
+                    </ul>
+                </div>`;
+            } else {
+                content.style.display = 'none';
+            }
+        }
+
+        /* --- TIMETABLE --- */
+        function addTask() {
+            let task = document.getElementById('tt-task').value;
+            let time = document.getElementById('tt-time').value;
+            
+            if(!task || !time) return showToast("Please enter both Task and Time!");
+            
+            let tasks = [];
+            try { tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]'); } catch(e) {}
+            
+            tasks.push({ id: Date.now(), task: task, time: time });
+            tasks.sort((a, b) => a.time.localeCompare(b.time));
+            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
+            
+            document.getElementById('tt-task').value = '';
+            document.getElementById('tt-time').value = '';
+            loadTasks();
+            showToast("Task Added!");
+        }
+
+        function loadTasks() {
+            let tasks = [];
+            try { tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]'); } catch(e) {}
+            
+            let list = document.getElementById('tt-list');
+            if(!list) return;
+            
+            list.innerHTML = '';
+            if(tasks.length === 0) {
+                list.innerHTML = '<p style="text-align:center; opacity:0.6; padding:20px;">No tasks scheduled yet.</p>';
+                return;
+            }
+            
+            tasks.forEach(t => {
+                let div = document.createElement('div');
+                div.className = 'list-item';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <div>
+                        <span style="font-weight:bold; color:var(--primary);">${t.time}</span><br>
+                        <span style="font-size:0.95rem;">${t.task}</span>
+                    </div>
+                    <button class="btn btn-outline" style="padding:5px 10px;" onclick="deleteTask(${t.id})">❌</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteTask(id) {
+            let tasks = [];
+            try { tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]'); } catch(e) {}
+            tasks = tasks.filter(t => t.id !== id);
+            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+
+        /* --- PROGRESS & SETTINGS --- */
+        function updateStats() {
+            let score = localStorage.getItem('ml_highscore') || '0';
+            let scoreEl = document.getElementById('p-score');
+            if(scoreEl) scoreEl.innerText = score;
+            
+            let streak = parseInt(localStorage.getItem('ml_streak') || '1');
+            let lastDate = localStorage.getItem('ml_lastDate');
+            let today = new Date().toDateString();
+            
+            if (lastDate !== today) {
+                localStorage.setItem('ml_lastDate', today);
+                if (lastDate) { 
+                    streak++; 
+                    localStorage.setItem('ml_streak', streak);
+                }
+            }
+            let streakEl = document.getElementById('p-streak');
+            if(streakEl) streakEl.innerText = streak;
+        }
+
+        function resetData() {
+            if(confirm("Are you sure? This will delete your high score, timetable, and settings.")) {
+                localStorage.clear();
+                showToast("Data Reset Successful!");
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+    </script>
+</body>
+</html>tistics & Data I
