@@ -92,7 +92,7 @@
     </div>
 
     <div id="page-dashboard" class="page">
-        <h3>Master Your Mathematics</h3>
+        <h3>Quick Tools & Tests</h3>
         <div class="grid">
             <div class="glass-card" onclick="openPage('tables')"><span class="icon">✖️</span><h3>Tables</h3></div>
             <div class="glass-card" onclick="setupDynamic('squares')"><span class="icon">🟦</span><h3>Squares</h3></div>
@@ -105,6 +105,27 @@
             <div class="glass-card" onclick="openPage('timetable')"><span class="icon">📅</span><h3>Timetable</h3></div>
             <div class="glass-card" onclick="openPage('progress')"><span class="icon">📈</span><h3>Progress</h3></div>
         </div>
+
+        <h3 style="margin-top:35px; border-top: 1px solid var(--card-border); padding-top: 15px;">Mathematics Modules</h3>
+        <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">Select a module to view syllabus topics.</p>
+        <div class="grid">
+            <div class="glass-card" onclick="openTopic('arithmetic')"><span class="icon">🔢</span><h3>Basic Arithmetic</h3></div>
+            <div class="glass-card" onclick="openTopic('percentage')"><span class="icon">⚖️</span><h3>Percent & Ratio</h3></div>
+            <div class="glass-card" onclick="openTopic('profit')"><span class="icon">💰</span><h3>Profit & Loss</h3></div>
+            <div class="glass-card" onclick="openTopic('time')"><span class="icon">⏳</span><h3>Time Based</h3></div>
+            <div class="glass-card" onclick="openTopic('algebra')"><span class="icon">🧮</span><h3>Algebra</h3></div>
+            <div class="glass-card" onclick="openTopic('geometry')"><span class="icon">📐</span><h3>Geometry</h3></div>
+            <div class="glass-card" onclick="openTopic('mensuration')"><span class="icon">📏</span><h3>Mensuration</h3></div>
+            <div class="glass-card" onclick="openTopic('trigo')"><span class="icon">🔺</span><h3>Trigonometry</h3></div>
+            <div class="glass-card" onclick="openTopic('stats')"><span class="icon">📊</span><h3>Statistics & DI</h3></div>
+            <div class="glass-card" onclick="openTopic('advanced')"><span class="icon">🧠</span><h3>Advanced Math</h3></div>
+        </div>
+    </div>
+
+    <div id="page-topic" class="page">
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <h2 id="topic-title">Module Syllabus</h2>
+        <div class="list-grid" id="topic-list" style="grid-template-columns: 1fr;"></div>
     </div>
 
     <div id="page-tables" class="page">
@@ -252,13 +273,10 @@
             localStorage.setItem('ml_theme', theme);
         }
 
-        // Updated function name from 'nav' to 'openPage' to prevent browser conflicts
         function openPage(pageName) {
             try {
-                // Hide all pages
                 document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 
-                // Show top bar for dashboard
                 if(pageName === 'dashboard') {
                     let topBar = document.getElementById('top-bar');
                     let marquee = document.getElementById('marquee');
@@ -266,7 +284,6 @@
                     if(marquee) marquee.style.display = 'none';
                 }
                 
-                // Reset quiz and mock setup displays if needed
                 if(pageName === 'quiz') {
                     document.getElementById('quiz-setup').style.display = 'block';
                     document.getElementById('quiz-play').style.display = 'none';
@@ -278,7 +295,6 @@
                     document.getElementById('mock-result').style.display = 'none';
                 }
                 
-                // Show target page
                 let targetPage = document.getElementById('page-' + pageName);
                 if(targetPage) {
                     targetPage.classList.add('active');
@@ -286,11 +302,9 @@
                 window.scrollTo(0,0);
             } catch(error) {
                 console.error("Navigation error: ", error);
-                alert("Navigation error occurred. Please refresh the page.");
             }
         }
 
-        // Safe window onload with Try-Catch
         window.onload = () => {
             try {
                 if(localStorage.getItem('ml_theme') === 'dark') document.body.classList.add('dark-mode');
@@ -301,66 +315,14 @@
             }
         }
 
-        /* --- TABLES --- */
-        function genTable() {
-            let n = parseInt(document.getElementById('t-num').value);
-            let f = document.getElementById('t-filt').value;
-            if(!n || n < 2) return showToast("Enter valid table number!");
-            
-            let html = "";
-            if(f && f > 0) {
-                html = `<div class="list-item"><span>${n} × ${f}</span> <b>${n*f}</b></div>`;
-            } else {
-                for(let i=1; i<=50; i++) html += `<div class="list-item"><span>${n} × ${i}</span> <b>${n*i}</b></div>`;
-            }
-            document.getElementById('t-list').innerHTML = html;
-        }
-
-        /* --- DYNAMIC (Squares, Cubes, Roots) --- */
-        let currDyn = '';
-        function setupDynamic(mode) {
-            currDyn = mode;
-            document.getElementById('dyn-search').value = '';
-            document.getElementById('dyn-title').innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
-            openPage('dynamic'); 
-            filterDynamic();
-        }
-        function filterDynamic() {
-            let f = document.getElementById('dyn-search').value.trim();
-            let html = ""; 
-            let count = 0;
-            for(let i=1; i<=1000; i++) {
-                if(f && !i.toString().startsWith(f)) continue;
-                if(count > 100) break; 
-                
-                let v = currDyn==='squares' ? i*i : currDyn==='cubes' ? i*i*i : Math.sqrt(i).toFixed(3);
-                let sym = currDyn==='squares' ? '²' : currDyn==='cubes' ? '³' : '√';
-                html += `<div class="list-item"><span>${currDyn==='roots'?sym+i:i+sym}</span> <b>${v}</b></div>`;
-                count++;
-            }
-            document.getElementById('dyn-list').innerHTML = html;
-        }
-
-        /* --- SMART SOLVER --- */
-        function solveEquation() {
-            let eq = document.getElementById('solve-in').value;
-            let out = document.getElementById('solve-out');
-            if(!eq) return showToast("Enter an equation");
-            try {
-                let sanitized = eq.replace(/[^0-9+\-*/(). ]/g, ''); 
-                let ans = Function('"use strict";return (' + sanitized + ')')();
-                out.style.display = 'block';
-                out.innerHTML = `
-                    <div style="color:var(--primary); margin-bottom:10px;"><b>Rule: BODMAS applied</b></div>
-                    <div><b>Equation:</b> ${sanitized}</div>
-                    <div style="font-size:1.5rem; color:var(--success); margin-top:10px;"><b>Answer = ${ans}</b></div>
-                `;
-            } catch(e) {
-                showToast("Invalid Equation. Use basic operators (+, -, *, /)");
-            }
-        }
-
-        /* --- SPEED QUIZ --- */
-        let qTime, qTimer, qScore, qAns;
-        function startQuiz() {
-            docume
+        /* --- MODULE TOPICS DATA & FUNCTION --- */
+        const mathTopics = {
+            arithmetic: { title: "1. Basic Arithmetic", items: ["Numbers (Natural, Whole, Integers)", "BODMAS", "Addition, Subtraction, Multiplication, Division", "Tables (2–30)", "Squares (1–50)", "Cubes (1–30)", "Fractions", "Decimals", "HCF & LCM", "Divisibility Rules"] },
+            percentage: { title: "2. Percentage & Ratio", items: ["Percentage", "Ratio & Proportion", "Partnership", "Average", "Mixture & Alligation"] },
+            profit: { title: "3. Profit & Loss", items: ["Profit & Loss", "Discount", "Simple Interest (SI)", "Compound Interest (CI)"] },
+            time: { title: "4. Time Based Topics", items: ["Time & Work", "Pipes & Cistern", "Time, Speed & Distance", "Train", "Boat & Stream"] },
+            algebra: { title: "5. Algebra", items: ["Algebraic Identities", "Linear Equations", "Quadratic Equations", "Simplification"] },
+            geometry: { title: "6. Geometry", items: ["Lines & Angles", "Triangle", "Circle", "Quadrilateral", "Polygon", "Coordinate Geometry (Basic)"] },
+            mensuration: { title: "7. Mensuration", items: ["Perimeter", "Area", "Surface Area", "Volume", "2D & 3D Figures"] },
+            trigo: { title: "8. Trigonometry", items: ["Trigonometric Ratios", "Heights & Distances", "Important Values", "Basic Identities"] },
+            stats: { title: "9. Statistics & Data I
