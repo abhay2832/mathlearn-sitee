@@ -80,35 +80,35 @@
     <div id="page-home" class="page active" style="text-align:center; padding-top:20vh;">
         <h1 style="font-size: 3.5rem; background: linear-gradient(135deg, var(--primary), #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom:10px;">Math Learn</h1>
         <p style="font-size:1.2rem; margin-bottom:30px; opacity:0.8;">Premium Offline Educational Suite</p>
-        <button class="btn" style="font-size:1.5rem; padding:15px 50px; border-radius:30px; box-shadow:var(--shadow);" onclick="nav('dashboard')">ENTER</button>
+        <button class="btn" style="font-size:1.5rem; padding:15px 50px; border-radius:30px; box-shadow:var(--shadow);" onclick="openPage('dashboard')">ENTER</button>
     </div>
 
     <div class="top-bar" id="top-bar" style="display:none;">
-        <h2 onclick="nav('dashboard')">Math Learn</h2>
+        <h2 onclick="openPage('dashboard')">Math Learn</h2>
         <div>
             <button class="icon-btn" onclick="toggleTheme()" title="Theme">🌗</button>
-            <button class="icon-btn" onclick="nav('settings')" title="Settings">⚙️</button>
+            <button class="icon-btn" onclick="openPage('settings')" title="Settings">⚙️</button>
         </div>
     </div>
 
     <div id="page-dashboard" class="page">
         <h3>Master Your Mathematics</h3>
         <div class="grid">
-            <div class="glass-card" onclick="nav('tables')"><span class="icon">✖️</span><h3>Tables</h3></div>
+            <div class="glass-card" onclick="openPage('tables')"><span class="icon">✖️</span><h3>Tables</h3></div>
             <div class="glass-card" onclick="setupDynamic('squares')"><span class="icon">🟦</span><h3>Squares</h3></div>
             <div class="glass-card" onclick="setupDynamic('cubes')"><span class="icon">🧊</span><h3>Cubes</h3></div>
             <div class="glass-card" onclick="setupDynamic('roots')"><span class="icon">🌱</span><h3>Roots</h3></div>
-            <div class="glass-card" onclick="nav('solver')"><span class="icon">🧮</span><h3>Smart Solver</h3></div>
-            <div class="glass-card" onclick="nav('quiz')"><span class="icon">🎯</span><h3>Speed Quiz</h3></div>
-            <div class="glass-card" onclick="nav('mock')"><span class="icon">📝</span><h3>Mock Test</h3></div>
-            <div class="glass-card" onclick="nav('papers')"><span class="icon">📄</span><h3>Prev Papers</h3></div>
-            <div class="glass-card" onclick="nav('timetable')"><span class="icon">📅</span><h3>Timetable</h3></div>
-            <div class="glass-card" onclick="nav('progress')"><span class="icon">📈</span><h3>Progress</h3></div>
+            <div class="glass-card" onclick="openPage('solver')"><span class="icon">🧮</span><h3>Smart Solver</h3></div>
+            <div class="glass-card" onclick="openPage('quiz')"><span class="icon">🎯</span><h3>Speed Quiz</h3></div>
+            <div class="glass-card" onclick="openPage('mock')"><span class="icon">📝</span><h3>Mock Test</h3></div>
+            <div class="glass-card" onclick="openPage('papers')"><span class="icon">📄</span><h3>Prev Papers</h3></div>
+            <div class="glass-card" onclick="openPage('timetable')"><span class="icon">📅</span><h3>Timetable</h3></div>
+            <div class="glass-card" onclick="openPage('progress')"><span class="icon">📈</span><h3>Progress</h3></div>
         </div>
     </div>
 
     <div id="page-tables" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Multiplication Tables</h2>
         <div class="panel">
             <input type="number" id="t-num" placeholder="Table No. (2-1000)">
@@ -119,7 +119,7 @@
     </div>
 
     <div id="page-dynamic" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2 id="dyn-title">Data</h2>
         <div class="panel">
             <input type="number" id="dyn-search" placeholder="Search Base Number..." oninput="filterDynamic()">
@@ -128,7 +128,7 @@
     </div>
 
     <div id="page-solver" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Smart Math Solver</h2>
         <div class="panel">
             <input type="text" id="solve-in" placeholder="Enter equation (e.g., 2 + 5 * 3)">
@@ -138,7 +138,7 @@
     </div>
 
     <div id="page-quiz" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         
         <div id="quiz-setup" class="exam-box">
             <h2>Math Speed Quiz</h2>
@@ -162,12 +162,12 @@
         <div id="quiz-result" class="exam-box" style="display:none;">
             <h2 id="qr-title">Time's Up!</h2>
             <div class="q-text" id="qr-score">Score: 0</div>
-            <button class="btn" onclick="nav('dashboard')">Finish</button>
+            <button class="btn" onclick="openPage('dashboard')">Finish</button>
         </div>
     </div>
 
     <div id="page-mock" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         
         <div id="mock-setup" class="exam-box">
             <h2>Army GD & UP Police Mock</h2>
@@ -187,12 +187,12 @@
         <div id="mock-result" class="exam-box" style="display:none;">
             <h2>Mock Test Report</h2>
             <div id="mr-stats" style="font-size:1.2rem; line-height:1.8; margin:20px 0; text-align:left;"></div>
-            <button class="btn" onclick="nav('dashboard')">Return to Dashboard</button>
+            <button class="btn" onclick="openPage('dashboard')">Return to Dashboard</button>
         </div>
     </div>
 
     <div id="page-papers" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Previous Year Vault</h2>
         <div class="panel">
             <select id="paper-select" onchange="loadPaper()">
@@ -205,7 +205,7 @@
     </div>
 
     <div id="page-timetable" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Study Timetable</h2>
         <div class="panel">
             <input type="text" id="tt-task" placeholder="E.g., Practice Percentage">
@@ -216,7 +216,7 @@
     </div>
 
     <div id="page-progress" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Your Progress</h2>
         <div class="grid">
             <div class="glass-card"><h3 id="p-streak" style="font-size:2rem; color:var(--primary);">1</h3><p>Day Streak 🔥</p></div>
@@ -225,7 +225,7 @@
     </div>
 
     <div id="page-settings" class="page">
-        <button class="btn btn-outline" onclick="nav('dashboard')" style="margin-bottom:15px;">← Back</button>
+        <button class="btn btn-outline" onclick="openPage('dashboard')" style="margin-bottom:15px;">← Back</button>
         <h2>Settings</h2>
         <div class="panel" style="flex-direction:column;">
             <button class="btn btn-outline" onclick="toggleTheme()">🌗 Toggle Dark Mode</button>
@@ -236,34 +236,69 @@
     <div id="toast">Message</div>
 
     <script>
-        /* --- CORE SYSTEM --- */
+        /* --- CORE SYSTEM & NAVIGATION --- */
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.innerText = msg; t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2500);
+            if(t) {
+                t.innerText = msg; 
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 2500);
+            }
         }
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
-            localStorage.setItem('ml_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+            let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('ml_theme', theme);
         }
 
-        function nav(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            if(page === 'dashboard') {
-                document.getElementById('top-bar').style.display = 'flex';
-                document.getElementById('marquee').style.display = 'none';
+        // Updated function name from 'nav' to 'openPage' to prevent browser conflicts
+        function openPage(pageName) {
+            try {
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                
+                // Show top bar for dashboard
+                if(pageName === 'dashboard') {
+                    let topBar = document.getElementById('top-bar');
+                    let marquee = document.getElementById('marquee');
+                    if(topBar) topBar.style.display = 'flex';
+                    if(marquee) marquee.style.display = 'none';
+                }
+                
+                // Reset quiz and mock setup displays if needed
+                if(pageName === 'quiz') {
+                    document.getElementById('quiz-setup').style.display = 'block';
+                    document.getElementById('quiz-play').style.display = 'none';
+                    document.getElementById('quiz-result').style.display = 'none';
+                }
+                if(pageName === 'mock') {
+                    document.getElementById('mock-setup').style.display = 'block';
+                    document.getElementById('mock-play').style.display = 'none';
+                    document.getElementById('mock-result').style.display = 'none';
+                }
+                
+                // Show target page
+                let targetPage = document.getElementById('page-' + pageName);
+                if(targetPage) {
+                    targetPage.classList.add('active');
+                }
+                window.scrollTo(0,0);
+            } catch(error) {
+                console.error("Navigation error: ", error);
+                alert("Navigation error occurred. Please refresh the page.");
             }
-            if(page === 'quiz') document.getElementById('quiz-setup').style.display = 'block';
-            if(page === 'mock') document.getElementById('mock-setup').style.display = 'block';
-            
-            document.getElementById('page-' + page).classList.add('active');
-            window.scrollTo(0,0);
         }
 
+        // Safe window onload with Try-Catch
         window.onload = () => {
-            if(localStorage.getItem('ml_theme') === 'dark') document.body.classList.add('dark-mode');
-            loadTasks(); updateStats();
+            try {
+                if(localStorage.getItem('ml_theme') === 'dark') document.body.classList.add('dark-mode');
+                loadTasks(); 
+                updateStats();
+            } catch(e) {
+                console.error("Error loading data from storage: ", e);
+            }
         }
 
         /* --- TABLES --- */
@@ -287,14 +322,16 @@
             currDyn = mode;
             document.getElementById('dyn-search').value = '';
             document.getElementById('dyn-title').innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
-            nav('dynamic'); filterDynamic();
+            openPage('dynamic'); 
+            filterDynamic();
         }
         function filterDynamic() {
             let f = document.getElementById('dyn-search').value.trim();
-            let html = ""; let count = 0;
+            let html = ""; 
+            let count = 0;
             for(let i=1; i<=1000; i++) {
                 if(f && !i.toString().startsWith(f)) continue;
-                if(count > 100) break; // Prevent lag
+                if(count > 100) break; 
                 
                 let v = currDyn==='squares' ? i*i : currDyn==='cubes' ? i*i*i : Math.sqrt(i).toFixed(3);
                 let sym = currDyn==='squares' ? '²' : currDyn==='cubes' ? '³' : '√';
@@ -304,13 +341,12 @@
             document.getElementById('dyn-list').innerHTML = html;
         }
 
-        /* --- SMART SOLVER (BODMAS) --- */
+        /* --- SMART SOLVER --- */
         function solveEquation() {
             let eq = document.getElementById('solve-in').value;
             let out = document.getElementById('solve-out');
             if(!eq) return showToast("Enter an equation");
             try {
-                // Safe basic math evaluation
                 let sanitized = eq.replace(/[^0-9+\-*/(). ]/g, ''); 
                 let ans = Function('"use strict";return (' + sanitized + ')')();
                 out.style.display = 'block';
@@ -327,247 +363,4 @@
         /* --- SPEED QUIZ --- */
         let qTime, qTimer, qScore, qAns;
         function startQuiz() {
-            document.getElementById('quiz-setup').style.display = 'none';
-            document.getElementById('quiz-play').style.display = 'block';
-            document.getElementById('quiz-result').style.display = 'none';
-            qScore = 0; qTime = 60;
-            nextQ();
-            
-            clearInterval(qTimer);
-            qTimer = setInterval(() => {
-                qTime--;
-                document.getElementById('q-timer').innerText = `⏱ ${qTime}s`;
-                if(qTime <= 0) endQuiz();
-            }, 1000);
-        }
-
-        function nextQ() {
-            let cat = document.getElementById('q-cat').value;
-            document.getElementById('q-score').innerText = `Score: ${qScore}`;
-            
-            let n1 = Math.floor(Math.random() * 15) + 2;
-            let n2 = Math.floor(Math.random() * 10) + 1;
-            
-            if(cat === 'mult' || (cat==='mix' && Math.random()>0.5)) {
-                qAns = n1 * n2; document.getElementById('q-text').innerText = `${n1} × ${n2} = ?`;
-            } else {
-                n1 = n1 * 4; qAns = n1 + n2; document.getElementById('q-text').innerText = `${n1} + ${n2} = ?`;
-            }
-            
-            let opts = [qAns];
-            while(opts.length < 4) {
-                let f = qAns + (Math.floor(Math.random() * 20) - 10);
-                if(!opts.includes(f) && f > 0) opts.push(f);
-            }
-            opts.sort(() => Math.random() - 0.5);
-            
-            let grid = document.getElementById('q-options');
-            grid.innerHTML = '';
-            
-            opts.forEach(opt => {
-                let btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if (opt === qAns) {
-                        btn.classList.add('correct');
-                        qScore++;
-                    } else {
-                        btn.classList.add('wrong');
-                    }
-                    setTimeout(nextQ, 250);
-                };
-                grid.appendChild(btn);
-            });
-        }
-
-        function endQuiz() {
-            clearInterval(qTimer);
-            document.getElementById('quiz-play').style.display = 'none';
-            document.getElementById('quiz-result').style.display = 'block';
-            document.getElementById('qr-score').innerText = `Score: ${qScore}`;
-            
-            let highscore = parseInt(localStorage.getItem('ml_highscore') || '0');
-            if(qScore > highscore) {
-                localStorage.setItem('ml_highscore', qScore);
-                showToast("New High Score! 🎉");
-                updateStats();
-            }
-        }
-
-        /* --- MOCK TEST --- */
-        let mData = [
-            { q: "What is 15% of 200?", o: ["25", "30", "35", "40"], a: "30" },
-            { q: "LCM of 12 and 18?", o: ["36", "24", "48", "72"], a: "36" },
-            { q: "√144 + √25 = ?", o: ["15", "16", "17", "18"], a: "17" },
-            { q: "Speed = 72 km/h. Convert to m/s.", o: ["15 m/s", "20 m/s", "25 m/s", "30 m/s"], a: "20 m/s" },
-            { q: "Average of first 5 natural numbers?", o: ["2", "3", "4", "5"], a: "3" }
-        ];
-        let mIndex, mScore;
-
-        function startMock() {
-            document.getElementById('mock-setup').style.display = 'none';
-            document.getElementById('mock-play').style.display = 'block';
-            document.getElementById('mock-result').style.display = 'none';
-            mIndex = 0; mScore = 0;
-            loadMockQ();
-        }
-
-        function loadMockQ() {
-            if(mIndex >= mData.length) return endMock();
-            
-            document.getElementById('m-count').innerText = `Q ${mIndex + 1}/${mData.length}`;
-            let currentQ = mData[mIndex];
-            document.getElementById('m-text').innerText = currentQ.q;
-            
-            let grid = document.getElementById('m-options');
-            grid.innerHTML = '';
-            
-            currentQ.o.forEach(opt => {
-                let btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.innerText = opt;
-                btn.onclick = () => {
-                    if(opt === currentQ.a) {
-                        btn.classList.add('correct');
-                        mScore += 2;
-                    } else {
-                        btn.classList.add('wrong');
-                        mScore -= 0.5;
-                    }
-                    setTimeout(() => { mIndex++; loadMockQ(); }, 350);
-                };
-                grid.appendChild(btn);
-            });
-        }
-
-        function endMock() {
-            document.getElementById('mock-play').style.display = 'none';
-            document.getElementById('mock-result').style.display = 'block';
-            
-            let status = mScore >= 5 ? '<span style="color:var(--success)">Pass ✅</span>' : '<span style="color:var(--danger)">Fail ❌</span>';
-            
-            document.getElementById('mr-stats').innerHTML = `
-                Attempted: 5/5<br>
-                Correct Marks: +${(mScore > 0 && mScore % 1 !== 0) || mScore < 0 ? 'N/A' : mScore} <br>
-                <b>Total Score: ${mScore} / 10</b><br><br>
-                Result: ${status}
-            `;
-        }
-
-        /* --- PREVIOUS PAPERS --- */
-        function loadPaper() {
-            let paper = document.getElementById('paper-select').value;
-            let content = document.getElementById('paper-content');
-            content.style.display = 'block';
-            
-            if(paper === 'army') {
-                content.innerHTML = `<div class="exam-box" style="text-align:left;">
-                    <h3 style="color:var(--primary); margin-bottom:10px;">Army GD 2024 Syllabus Focus</h3>
-                    <ul style="padding-left:20px; line-height:1.6;">
-                        <li>Fractions & Decimals</li>
-                        <li>Percentage & Average</li>
-                        <li>Profit, Loss & Discount</li>
-                        <li>Simple & Compound Interest</li>
-                    </ul>
-                    <p style="margin-top:15px; font-style:italic;">Note: This is a demo overview module.</p>
-                </div>`;
-            } else if(paper === 'up') {
-                content.innerHTML = `<div class="exam-box" style="text-align:left;">
-                    <h3 style="color:var(--primary); margin-bottom:10px;">UP Police 2023 Math Focus</h3>
-                    <ul style="padding-left:20px; line-height:1.6;">
-                        <li>Number System & Simplification</li>
-                        <li>Time, Work & Distance</li>
-                        <li>Mensuration (2D & 3D)</li>
-                        <li>Data Interpretation (Graphs)</li>
-                    </ul>
-                    <p style="margin-top:15px; font-style:italic;">Note: This is a demo overview module.</p>
-                </div>`;
-            } else {
-                content.style.display = 'none';
-            }
-        }
-
-        /* --- TIMETABLE --- */
-        function addTask() {
-            let task = document.getElementById('tt-task').value;
-            let time = document.getElementById('tt-time').value;
-            
-            if(!task || !time) return showToast("Please enter both Task and Time!");
-            
-            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
-            tasks.push({ id: Date.now(), task: task, time: time });
-            
-            // Sort by time
-            tasks.sort((a, b) => a.time.localeCompare(b.time));
-            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
-            
-            document.getElementById('tt-task').value = '';
-            document.getElementById('tt-time').value = '';
-            loadTasks();
-            showToast("Task Added!");
-        }
-
-        function loadTasks() {
-            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
-            let list = document.getElementById('tt-list');
-            list.innerHTML = '';
-            
-            if(tasks.length === 0) {
-                list.innerHTML = '<p style="text-align:center; opacity:0.6; padding:20px;">No tasks scheduled yet.</p>';
-                return;
-            }
-            
-            tasks.forEach(t => {
-                let div = document.createElement('div');
-                div.className = 'list-item';
-                div.style.marginBottom = '10px';
-                div.innerHTML = `
-                    <div>
-                        <span style="font-weight:bold; color:var(--primary);">${t.time}</span><br>
-                        <span style="font-size:0.95rem;">${t.task}</span>
-                    </div>
-                    <button class="btn btn-outline" style="padding:5px 10px;" onclick="deleteTask(${t.id})">❌</button>
-                `;
-                list.appendChild(div);
-            });
-        }
-
-        function deleteTask(id) {
-            let tasks = JSON.parse(localStorage.getItem('ml_tasks') || '[]');
-            tasks = tasks.filter(t => t.id !== id);
-            localStorage.setItem('ml_tasks', JSON.stringify(tasks));
-            loadTasks();
-        }
-
-        /* --- PROGRESS & SETTINGS --- */
-        function updateStats() {
-            let score = localStorage.getItem('ml_highscore') || '0';
-            document.getElementById('p-score').innerText = score;
-            
-            // Basic Streak calculation logic
-            let streak = parseInt(localStorage.getItem('ml_streak') || '1');
-            let lastDate = localStorage.getItem('ml_lastDate');
-            let today = new Date().toDateString();
-            
-            if (lastDate !== today) {
-                localStorage.setItem('ml_lastDate', today);
-                if (lastDate) { 
-                    // Increment streak only if they login on a new day
-                    streak++; 
-                    localStorage.setItem('ml_streak', streak);
-                }
-            }
-            document.getElementById('p-streak').innerText = streak;
-        }
-
-        function resetData() {
-            if(confirm("Are you sure? This will delete your high score, timetable, and settings.")) {
-                localStorage.clear();
-                showToast("Data Reset Successful!");
-                setTimeout(() => location.reload(), 1000);
-            }
-        }
-    </script>
-</body>
-</html>
+            docume
